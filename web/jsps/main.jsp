@@ -25,9 +25,6 @@
     <label>word_Id</label>
     <input type="text" name="word_id">
     <br>
-    <label>translation_id</label>
-    <input type="text" name="translation_id">
-    <br>
     <label>context</label>
     <input type="text" name="context">
     <br>

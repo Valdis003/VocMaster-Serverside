@@ -3,11 +3,9 @@ package main.java.servlets;
 import main.java.entities.Card;
 import main.java.entities.Context;
 import main.java.entities.User;
-import main.java.entities.Word;
 import main.java.utils.dao.DaoFactory;
 import main.java.utils.dao.UserDao;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import main.java.utils.dao.WordDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by Valdis003
@@ -23,50 +20,37 @@ import java.util.ArrayList;
  * for VocMasterDist
  */
 public class AddCardServlet extends HttpServlet {
-    Session session;
-    DaoFactory daoFactory = DaoFactory.getInstance();
-    UserDao userDao = daoFactory.getUserDao();
+    private DaoFactory daoFactory = DaoFactory.getInstance();
+    private WordDao wordDao = daoFactory.getWordDao();
+    private UserDao userDao = daoFactory.getUserDao();
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession httpSession = req.getSession(false);
+        HttpSession httpSession = req.getSession();
 
-        if (httpSession != null) {
+        if (httpSession.getAttribute("user") != null) {
 
-            String dictRespose = (String) httpSession.getAttribute("dict_respose");
-            System.out.println("XXXXXXXXXXXXX");
-            System.out.println(dictRespose);
-            System.out.println("XXXXXXXXXXXXX");
-
-
-            int gNumber = Integer.parseInt(req.getParameter("gnumber"));
+            int meaningId = Integer.parseInt(req.getParameter("gnumber"));
             String source = req.getParameter("source");
-            int word_id = Integer.parseInt(req.getParameter("word_id"));
-            int translation_id = Integer.parseInt(req.getParameter("translation_id"));
-            String context = req.getParameter("context");
-            int user_id = Integer.parseInt(req.getParameter("user_id"));
+            int wordId = Integer.parseInt(req.getParameter("word_id"));
+            String context_text = req.getParameter("context");
+            String userLogin = ((User) httpSession.getAttribute("user")).getLogin();
 
-
-            Transaction transaction = session.beginTransaction();
-
-            Context context1 = new Context();
-            context1.setText(context);
+            Context context = new Context();
+            context.setText(context_text);
+            wordDao.saveContext(context);
 
             Card card = new Card();
-            card.setWord(session.get(Word.class, word_id));
-//            card.setTranslation(session.get(Word.class, translation_id));
-            card.setContext(context1);
+            card.setWord(wordDao.getWordById(wordId));
+            card.setContext(context);
             card.setSource(source);
+            card.setMeaning(wordDao.getMeaningById(meaningId));
 
-            User user = session.get(User.class, user_id);
-            ArrayList<Card> cards = new ArrayList<>();
-            cards.add(card);
-            user.setCards(cards);
+            User user = userDao.getUserByLogin(userLogin);
+            user.getCards().add(card);
 
-            session.save(context1);
-            session.save(card);
-            session.save(user);
-            transaction.commit();
-            session.close();
+            wordDao.saveCard(card);
+            userDao.updateUser(user);
+
         } else {
             resp.getWriter().write("WRONG_SESSION");
         }

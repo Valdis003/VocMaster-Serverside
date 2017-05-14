@@ -55,4 +55,5 @@ public class Meaning {
     public void setAltTranslations(Collection<String> altTranslations) {
         this.altTranslations = altTranslations;
     }
+
 }

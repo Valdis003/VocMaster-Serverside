@@ -7,7 +7,6 @@ import main.java.utils.ConstantManager;
 import main.java.utils.RequestExecutor;
 import main.java.utils.dao.DaoFactory;
 import main.java.utils.dao.WordDao;
-import main.java.utils.to_user.Response;
 import main.java.utils.yandex_dic_response.*;
 
 import javax.servlet.ServletException;
@@ -35,12 +34,16 @@ public class TranslateServlet extends HttpServlet {
 
         HttpSession httpSession = req.getSession();
 
-        resp.getWriter().write(makeRequestFromText(req.getParameter("text"), httpSession));
+        Word word = wordDao.getWordByText(req.getParameter("text"));
+        if (word == null)
+            resp.getWriter().write(getDefFromDict(req.getParameter("text"), httpSession));
+        else
+            resp.getWriter().write(gson.toJson(word));
 
         resp.setCharacterEncoding("UTF-8"); // FOR CYRILLIC
     }
 
-    private String makeRequestFromText(String text, HttpSession httpSession) {
+    private String getDefFromDict(String text, HttpSession httpSession) {
         String jsonResponse = "";
         text = text.trim();
         int wordsCount = text.split(" ").length;
@@ -50,9 +53,8 @@ public class TranslateServlet extends HttpServlet {
                     + "&text=" + text + "&lang=en-ru";
 
             String dictResponse = rex.executePost(ConstantManager.DictionaryURL, urlParameters);
-            httpSession.setAttribute("dict_response", dictResponse);
 
-            Response response = cutDictResponse(dictResponse);
+            Word response = takeDataFromResponse(dictResponse);
             httpSession.setAttribute("response", response);
 
             jsonResponse = gson.toJson(response);
@@ -67,16 +69,15 @@ public class TranslateServlet extends HttpServlet {
         return jsonResponse;
     }
 
-    private Response cutDictResponse(String dictResponse) {
-        Response response = new Response();
+    private Word takeDataFromResponse(String dictResponse) {
         YandexResponse yandexResponse = gson.fromJson(dictResponse, YandexResponse.class);
         Word mainWord = new Word();
 
         mainWord.setWord(yandexResponse.getDef().get(0).getText());
         mainWord.setTranscription(yandexResponse.getDef().get(0).getTs());
 
+
 //        MAKE 5 GROUPS BY MEANING
-//        TODO: SAVE OBJECTS TO DATABASE
         int k = 0;
         papaloop:
         for (Def def : yandexResponse.getDef()) {
@@ -85,6 +86,8 @@ public class TranslateServlet extends HttpServlet {
                 Meaning meaning = new Meaning();
                 meaning.setTranslation(tr.getText());
 
+                wordDao.saveMeaning(meaning);
+                mainWord.getMeanings().add(meaning);
 
                 if (tr.getMean() != null)
                     for (Mean x : tr.getMean()) {
@@ -96,7 +99,6 @@ public class TranslateServlet extends HttpServlet {
                         meaning.getAltTranslations().add(x.getText());
                     }
 
-                response.getMeanings().add(meaning);
                 k++;
                 if (k > 4) {
                     break papaloop;
@@ -104,8 +106,8 @@ public class TranslateServlet extends HttpServlet {
             }
         }
 
-        response.setWord(mainWord);
+        wordDao.saveWord(mainWord);
 
-        return response;
+        return mainWord;
     }
 }

@@ -56,5 +56,10 @@ public class UserDao {
 //        entityManager.close();
     }
 
+    public void updateUser(User user) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(user);
+        entityManager.getTransaction().commit();
+    }
 
 }

@@ -1,6 +1,8 @@
 package main.java.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Valdis003
@@ -20,6 +22,12 @@ public class Word {
     private String transcription;
     @OneToOne
     private Language language;
+    @OneToMany
+    private Collection<Meaning> meanings;
+
+    public Word() {
+        meanings = new ArrayList<>();
+    }
 
     public int getId() {
         return id;
@@ -75,5 +83,13 @@ public class Word {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public Collection<Meaning> getMeanings() {
+        return meanings;
+    }
+
+    public void setMeanings(Collection<Meaning> meanings) {
+        this.meanings = meanings;
     }
 }
