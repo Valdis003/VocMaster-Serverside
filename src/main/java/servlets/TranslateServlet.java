@@ -76,7 +76,6 @@ public class TranslateServlet extends HttpServlet {
         mainWord.setWord(yandexResponse.getDef().get(0).getText());
         mainWord.setTranscription(yandexResponse.getDef().get(0).getTs());
 
-
 //        MAKE 5 GROUPS BY MEANING
         int k = 0;
         papaloop:

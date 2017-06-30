@@ -8,7 +8,7 @@ import javax.persistence.*;
  * for VocMasterDist
  */
 @Entity
-@Table(name = "Language_table")
+@Table(name = "language_table")
 public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

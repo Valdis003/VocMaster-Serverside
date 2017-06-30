@@ -30,6 +30,7 @@ public class DaoFactory {
         if (wordDao == null) {
             wordDao = new WordDao(sessionFactory);
         }
+
         return wordDao;
     }
 }

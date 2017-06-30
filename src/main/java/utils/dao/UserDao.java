@@ -1,6 +1,5 @@
 package main.java.utils.dao;
 
-
 import main.java.entities.User;
 import org.hibernate.SessionFactory;
 
@@ -13,7 +12,6 @@ public class UserDao {
 
     protected UserDao(SessionFactory factory) {
         this.factory = factory;
-
         entityManager = factory.createEntityManager();
     }
 
@@ -61,5 +59,4 @@ public class UserDao {
         entityManager.merge(user);
         entityManager.getTransaction().commit();
     }
-
 }
