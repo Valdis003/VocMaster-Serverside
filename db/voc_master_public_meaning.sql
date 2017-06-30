@@ -1,0 +1,10 @@
+INSERT INTO public.meaning (id, translation) VALUES (2, 'лысый');
+INSERT INTO public.meaning (id, translation) VALUES (3, 'облыселый');
+INSERT INTO public.meaning (id, translation) VALUES (4, 'голый');
+INSERT INTO public.meaning (id, translation) VALUES (5, 'лысоватый');
+INSERT INTO public.meaning (id, translation) VALUES (6, 'лысеть');
+INSERT INTO public.meaning (id, translation) VALUES (10, 'смелый');
+INSERT INTO public.meaning (id, translation) VALUES (11, 'дерзкий');
+INSERT INTO public.meaning (id, translation) VALUES (12, 'наглый');
+INSERT INTO public.meaning (id, translation) VALUES (13, 'четкий');
+INSERT INTO public.meaning (id, translation) VALUES (14, 'энергичный');

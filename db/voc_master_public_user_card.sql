@@ -1,0 +1,1 @@
+INSERT INTO public.user_card (user_id, card_id) VALUES (1, 21);

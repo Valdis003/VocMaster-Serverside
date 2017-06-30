@@ -1,0 +1,1 @@
+INSERT INTO public.user_table (id, email, login, password) VALUES (1, 'admin', 'admin', 'admin');

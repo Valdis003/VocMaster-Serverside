@@ -1,0 +1,9 @@
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (2, 'hairless');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (4, 'naked');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (5, 'balding');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (10, 'brave');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (10, 'decisive');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (11, 'daring');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (12, 'impudent');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (13, 'clear');
+INSERT INTO public.meaning_synonyms (meaning_id, synonyms) VALUES (14, 'energetic');
